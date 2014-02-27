@@ -143,8 +143,6 @@ class ResumeController {
             }
         }
 
-
-
         def resumeInstance = Resume.get(id)
         if (!resumeInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'resume.label', default: 'Resume'), id])
@@ -163,7 +161,12 @@ class ResumeController {
 
     def searchSame() {
         User user = getAuthenticatedUser()
-        def resume = user.profile.resume
+        def resume = user.profile?.resume
+
+        if(resume == null) {
+            redirect uri: ''
+            return
+        }
 
         println user
         println resume
