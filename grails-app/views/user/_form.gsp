@@ -8,6 +8,7 @@
 		<span class="required-indicator">*</span>
 	</label>
 	<g:textField name="username" required="" value="${userInstance?.username}"/>
+
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'password', 'error')} required">
@@ -16,6 +17,7 @@
 		<span class="required-indicator">*</span>
 	</label>
 	<g:textField name="password" required="" value="${userInstance?.password}"/>
+
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'profile', 'error')} required">
@@ -24,6 +26,7 @@
 		<span class="required-indicator">*</span>
 	</label>
 	<g:select id="profile" name="profile.id" from="${grailswork2.Profile.list()}" optionKey="id" required="" value="${userInstance?.profile?.id}" class="many-to-one"/>
+
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'accountExpired', 'error')} ">
@@ -32,6 +35,7 @@
 		
 	</label>
 	<g:checkBox name="accountExpired" value="${userInstance?.accountExpired}" />
+
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'accountLocked', 'error')} ">
@@ -40,6 +44,7 @@
 		
 	</label>
 	<g:checkBox name="accountLocked" value="${userInstance?.accountLocked}" />
+
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'enabled', 'error')} ">
@@ -48,6 +53,7 @@
 		
 	</label>
 	<g:checkBox name="enabled" value="${userInstance?.enabled}" />
+
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: userInstance, field: 'passwordExpired', 'error')} ">
@@ -56,5 +62,6 @@
 		
 	</label>
 	<g:checkBox name="passwordExpired" value="${userInstance?.passwordExpired}" />
+
 </div>
 

@@ -14,7 +14,11 @@ class User {
 
 	static transients = ['springSecurityService']
 
-	static constraints = {
+    @Override
+    String toString() {
+        "Username: " + username + profile
+    }
+    static constraints = {
 		username blank: false, unique: true
         password blank: false
         profile nullable: false

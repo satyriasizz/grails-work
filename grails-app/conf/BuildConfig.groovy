@@ -61,5 +61,6 @@ grails.project.dependency.resolution = {
         compile ":spring-security-core:2.0-RC2"
         compile ':cache:1.0.1'
         compile ":mail:1.0.1"
+        compile ":scaffolding:2.0.2"
     }
 }
