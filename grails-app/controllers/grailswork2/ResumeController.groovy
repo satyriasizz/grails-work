@@ -6,7 +6,7 @@ import org.springframework.dao.DataIntegrityViolationException
 @Secured(['ROLE_ADMIN', 'ROLE_WORKER'])
 class ResumeController {
 
-    static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+    static allowedMethods = [save: "POST", update: "POST", delete: ["GET", "POST"]] // Get needed for Worker and Post was generated
 
     def index() {
         redirect(action: "list", params: params)
@@ -20,12 +20,12 @@ class ResumeController {
 
     @Secured(['ROLE_ADMIN', 'ROLE_EMPLOYER'])
     def mailWorker(Long id) {
-       [email: Profile.findById(id).email]
+        [email: Profile.findById(id).email]
     }
 
     @Secured(['ROLE_ADMIN', 'ROLE_EMPLOYER'])
     def sendEmail() {
-        try{
+        try {
             sendMail {
                 to params.email
                 subject params.subject
@@ -83,7 +83,11 @@ class ResumeController {
         //----------
         if (id == null) {
             User user = getAuthenticatedUser()
-            id = user.profile.resume.id
+            id = user.profile.resume?.id
+            if (id == null) {
+                redirect uri: ''
+                return
+            }
         }
         //---------
         def resumeInstance = Resume.get(id)
@@ -107,8 +111,8 @@ class ResumeController {
         if (version != null) {
             if (resumeInstance.version > version) {
                 resumeInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                          [message(code: 'resume.label', default: 'Resume')] as Object[],
-                          "Another user has updated this Resume while you were editing")
+                        [message(code: 'resume.label', default: 'Resume')] as Object[],
+                        "Another user has updated this Resume while you were editing")
                 render(view: "edit", model: [resumeInstance: resumeInstance])
                 return
             }
@@ -126,23 +130,36 @@ class ResumeController {
     }
 
     def delete(Long id) {
+
+        redirect uri: ''
+        if (id == null ) {
+            User u = getAuthenticatedUser()
+            id = u.profile.resume?.id
+            u.profile.resume = null
+
+            if(id == null) { //resume already deleted
+
+                return
+            }
+        }
+
+
+
         def resumeInstance = Resume.get(id)
         if (!resumeInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'resume.label', default: 'Resume'), id])
-            redirect(action: "list")
             return
         }
 
         try {
             resumeInstance.delete(flush: true)
             flash.message = message(code: 'default.deleted.message', args: [message(code: 'resume.label', default: 'Resume'), id])
-            redirect(action: "list")
         }
         catch (DataIntegrityViolationException e) {
             flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'resume.label', default: 'Resume'), id])
-            redirect(action: "show", id: id)
         }
     }
+
 
     def searchSame() {
         User user = getAuthenticatedUser()

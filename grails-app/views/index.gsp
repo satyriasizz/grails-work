@@ -85,21 +85,22 @@
 
 		<div id="page-body" role="main">
 
-            <sec:ifAllGranted roles="ROLE_ADMIN">
-                <li>Administrator Link: </li>
-			    <span class="link"><a href="${createLink(uri: "/user/index/")}">Manage users</a></span>
-            </sec:ifAllGranted>
-
             <h3>Authorization: </h3>
             <span class="link"><a href="${createLink(uri: '/registration')}">Registration</a></span>
             <span class="link"><a href="${createLink(uri: '/login')}">Sign in</a></span>
             <span class="link"><a href="${createLink(uri: '/logout')}">Logout</a></span>
+
+            <sec:ifAllGranted roles="ROLE_ADMIN">
+                <li>Administrator Link: </li>
+                <span class="link"><a href="${createLink(uri: "/user/index/")}">Manage users</a></span>
+            </sec:ifAllGranted>
 
             <sec:ifAllGranted roles="ROLE_WORKER"> <!-- TODO Why don`t work with admin?  (,ROLE_ADMIN)-->
             <h3>Worker menu:</h3>
             <span class="link"><a href="${createLink(uri: '/resume/create')}">Add resume</a></span>
             <span class="link"><a href="${createLink(uri: "/resume/edit/")}">Edit resume</a></span>
             <span class="link"><a href="${createLink(uri: "/resume/searchSame/")}">Show nearby resumes</a></span>
+            <span class="link"><a href="${createLink(uri: "/resume/delete/")} ">Delete resume</a></span>
             </sec:ifAllGranted>
 
             <sec:ifAllGranted roles="ROLE_EMPLOYER">
