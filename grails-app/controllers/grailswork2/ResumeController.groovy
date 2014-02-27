@@ -12,7 +12,7 @@ class ResumeController {
         redirect(action: "list", params: params)
     }
 
-    @Secured(['ROLE_ADMIN', 'ROLE_WORKER', 'ROLE_EMPLOYER'])
+    @Secured(['ROLE_ADMIN', 'ROLE_EMPLOYER'])
     def list(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         [resumeInstanceList: Resume.list(params), resumeInstanceTotal: Resume.count()]
@@ -43,18 +43,23 @@ class ResumeController {
 
     def save() {
         def resumeInstance = new Resume(params)
+
+        //***
+        User user = getAuthenticatedUser()
+        resumeInstance.setProfile(user.profile)
+        //***
+
         if (!resumeInstance.save(flush: true)) {
             render(view: "create", model: [resumeInstance: resumeInstance])
             return
         }
 
-        flash.message = message(code: 'default.created.message', args: [message(code: 'resume.label', default: 'Resume'), resumeInstance.id])
-
-        //-------
-        User user = authenticatedUser
+        //------- Add resume to authenticated user, add profile-link to resume
         user.profile.setResume(resumeInstance)
         user.save()
         //-------
+
+        flash.message = message(code: 'default.created.message', args: [message(code: 'resume.label', default: 'Resume'), resumeInstance.id])
 
         redirect(action: "show", id: resumeInstance.id)
     }

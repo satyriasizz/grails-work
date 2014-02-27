@@ -21,5 +21,6 @@ class Resume {
     boolean equals(Object obj) {
         purpose == obj.purpose && edu == obj.edu && exp == obj.exp
     }
+
     static belongsTo = [profile: Profile]
 }
