@@ -38,6 +38,9 @@ class ResumeController {
     }
 
     def create() {
+        if (getAuthenticatedUser().profile.resume != null) {
+            redirect uri: ''
+        }
         [resumeInstance: new Resume(params)]
     }
 
@@ -56,6 +59,7 @@ class ResumeController {
 
         //------- Add resume to authenticated user, add profile-link to resume
         user.profile.setResume(resumeInstance)
+        println user.profile.resume
         user.save()
         //-------
 
@@ -78,7 +82,7 @@ class ResumeController {
     def edit(Long id) {
         //----------
         if (id == null) {
-            User user = authenticatedUser
+            User user = getAuthenticatedUser()
             id = user.profile.resume.id
         }
         //---------
@@ -141,8 +145,11 @@ class ResumeController {
     }
 
     def searchSame() {
-        User user = authenticatedUser
+        User user = getAuthenticatedUser()
         def resume = user.profile.resume
+
+        println user
+        println resume
 
         HashSet result = Resume.findAllByPurposeOrEduLikeOrExp(resume.purpose, resume.edu, resume.exp);
         result.remove(resume)
