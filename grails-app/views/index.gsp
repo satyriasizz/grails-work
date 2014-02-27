@@ -86,16 +86,8 @@
 		<div id="page-body" role="main">
 
             <sec:ifAllGranted roles="ROLE_ADMIN">
-                <li>Administrator Link</li>
-
-			<div id="controller-list" role="navigation">
-				<h2>Available Controllers:</h2>
-				<ul>
-					<g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
-						<li class="controller"><g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link></li>
-					</g:each>
-				</ul>
-			</div>
+                <li>Administrator Link: </li>
+			    <span class="link"><a href="${createLink(uri: "/user/index/")}">Manage users</a></span>
             </sec:ifAllGranted>
 
             <h3>Authorization: </h3>
